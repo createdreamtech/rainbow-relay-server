@@ -1,0 +1,147 @@
+{
+    "openrpc": "1.0.0",
+    "info": {
+        "version": "0.1.0",
+        "title": "Rainbow Bridge Relay Service",
+        "description": "A service to control rainbow bridge relayers.",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:7755"
+        }
+    ],
+    "methods": [
+        {
+            "name": "logs",
+            "summary": "Return the list of logs from given unix timestamp",
+            "params": [
+                {
+                    "$ref": "#/components/contentDescriptors/Timestamp"
+                }
+            ],
+            "result": {
+                "name": "logsResult",
+                "description": "list of log lines",
+                "schema": {
+                    "$ref": "#/components/schemas/Logs"
+                }
+            }
+        },
+        {
+            "name": "status",
+            "summary": "Returns status data for relayer service included what's running",
+            "params": [],
+            "result": {
+                "name": "status",
+                "description": "Service status description",
+                "schema": {
+                    "$ref": "#/components/schemas/Status"
+                }
+            }
+        },
+        {
+            "name": "start",
+            "summary": "Starts a relayer of type eth2near or near2eth/ if already running it nops",
+            "params": [
+                {
+                    "$ref": "#/components/contentDescriptors/RelayerType"
+                }
+            ],
+            "result": {
+                "name": "relayerStart",
+                "description": "`true` if relayer started",
+                "schema": {
+                    "$ref": "#/components/schemas/RelayerStatus"
+                }
+            }
+        },
+        {
+            "name": "stop",
+            "summary": "Starts a relayer of type eth2near or near2eth/ if already running it nops",
+            "params": [
+                {
+                    "$ref": "#/components/contentDescriptors/RelayerType"
+                }
+            ],
+            "result": {
+                "name": "relayerStop",
+                "description": "`true` if relayer stopped",
+                "schema": {
+                    "$ref": "#/components/schemas/RelayerStatus"
+                }
+            }
+        }
+    ],
+    "components": {
+        "schemas": {
+            "Logs": {
+                "title": "logs",
+                "type":"array",
+                "items": {
+                    "type":"string"
+                }
+            },
+            "Status": {
+                "title": "status",
+                "type": "object",
+                "properties": {
+                    "services": {
+                        "$ref": "#/components/schemas/RelayerStatuses"
+                    }
+                }
+            },
+            "RelayerStatus": {
+                "title": "relayerStatus",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "RelayerStatuses": {
+                "title": "relayerStatuses",
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/RelayerStatus"
+                }
+            },
+            "RelayerType": {
+                "title": "relayerType",
+                "description": "The type for a relayer",
+                "type": "string",
+                "enum": [
+                    "eth2near",
+                    "near2eth"
+                ]
+            },
+            "Timestamp": {
+                "title": "timestamp",
+                "type": "number"
+            }
+        },
+        "contentDescriptors": {
+            "RelayerType": {
+                "name": "relayerType",
+                "description": "The type of relayer you're refering to",
+                "summary": "The relayer type",
+                "schema": {
+                    "$ref": "#/components/schemas/RelayerType"
+                }
+            },
+            "Timestamp": {
+                "name": "timestamp",
+                "summary": "unix timestamp in seconds",
+                "required": false,
+                "description": "defaults to last 1hr in server time",
+                "schema": {
+                    "$ref": "#/components/schemas/Timestamp"
+                }
+            }
+        }
+    }
+}
