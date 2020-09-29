@@ -79,14 +79,14 @@
     "components": {
         "schemas": {
             "Logs": {
-                "title": "logs",
+                "title": "logData",
                 "type":"array",
                 "items": {
                     "type":"string"
                 }
             },
             "Status": {
-                "title": "status",
+                "title": "statusData",
                 "type": "object",
                 "properties": {
                     "services": {
