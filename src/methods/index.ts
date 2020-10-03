@@ -4,6 +4,7 @@
 import { makeLogger } from "../lib/logging";
 import { MethodMapping } from "@open-rpc/server-js/build/router";
 import * as types from "../generated-types";
+import { Service } from "../lib/service";
 
 const logger = makeLogger("RainbowRelayService", "Methods");
 
@@ -15,7 +16,7 @@ export interface RainbowRelayServiceMethodMapping extends MethodMapping {
 }
 
 
-export const methods = (): RainbowRelayServiceMethodMapping => {
+export const methods = (service: Service): RainbowRelayServiceMethodMapping => {
 return {
     logs: async (timestamp) => {
         return [""]

@@ -4,9 +4,11 @@ import { methods } from "../methods";
 import cors from "cors";
 import { json as jsonParser } from "body-parser";
 import { HandleFunction } from "connect";
+import {Config} from "./config"
 
 import openRPCDoc from "../../openrpc.json";
 import jsonSchemaRefParser from "json-schema-ref-parser";
+import { createService } from "./service";
 const openRPC = openRPCDoc as any;
 /**
  * RainbowRelayServer - is the server routing side of the rainbow relay proxy 
@@ -14,24 +16,26 @@ const openRPC = openRPCDoc as any;
  */
 export class RainbowRelayServer {
 
-  public port: string;
+  public config: Config;
 
-  constructor(port: string) {
-    this.port = port;
+  constructor(config: Config) {
+    this.config = config
   }
 
   /**
    * start - Launches rainbow relay
    */
   public async start() {
-    const methodMapping = methods();
+    const {port,serviceType} = this.config;
+    const service = createService(serviceType);
+    const methodMapping = methods(service);
     const derefOpenRPCDoc = await jsonSchemaRefParser.dereference(openRPC) as OpenrpcDocument;
     const router = new Router(derefOpenRPCDoc, methodMapping);
     const options = {
       methodMapping,
       openrpcDocument: derefOpenRPCDoc,
       router,
-      transportConfigs: this.setupTransport(this.port),
+      transportConfigs: this.setupTransport(port),
     };
     const server = new Server(options);
     server.start();

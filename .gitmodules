@@ -1,0 +1,5 @@
+[submodule "vendor/ethashproof"]
+	path = vendor/ethashproof
+	url = https://github.com/nearprotocol/ethashproof
+	branch = master
+	ignore = dirty

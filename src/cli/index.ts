@@ -13,11 +13,15 @@ program
     "Set port for rainbow relay service",
     "7755",
   )
+  .requiredOption(
+    "-s, --service <service>",
+    "Set service type",
+  )
   .action(async () => {
     try {
       await startRainbowRelayServiceFromCLI(program);
-    } catch (e) {
-      logger.error("Could not start rainbow relay server.");
+    } catch (e) {e
+      logger.error(`Could not start rainbow relay server. ${e.message}`,);
       logger.debug(e.stack);
     }
   })
