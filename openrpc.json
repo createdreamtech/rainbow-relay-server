@@ -16,22 +16,6 @@
     ],
     "methods": [
         {
-            "name": "logs",
-            "summary": "Return the list of logs from given unix timestamp",
-            "params": [
-                {
-                    "$ref": "#/components/contentDescriptors/Timestamp"
-                }
-            ],
-            "result": {
-                "name": "logsResult",
-                "description": "list of log lines",
-                "schema": {
-                    "$ref": "#/components/schemas/Logs"
-                }
-            }
-        },
-        {
             "name": "status",
             "summary": "Returns status data for relayer service included what's running",
             "params": [],
@@ -44,55 +28,59 @@
             }
         },
         {
+            "name": "config",
+            "summary": "Returns redacted configuration data for the relayer service",
+            "params": [],
+            "result": {
+                "name": "configResult",
+                "description": "Configuration of the service",
+                "schema": {
+                    "$ref": "#/components/schemas/Config"
+                }
+            }
+        },
+        {
             "name": "start",
             "summary": "Starts a relayer of type eth2near or near2eth/ if already running it nops",
-            "params": [
-                {
-                    "$ref": "#/components/contentDescriptors/RelayerType"
-                }
-            ],
+            "params": [],
             "result": {
                 "name": "relayerStart",
                 "description": "`true` if relayer started",
                 "schema": {
-                    "$ref": "#/components/schemas/RelayerStatus"
+                    "$ref": "#/components/schemas/Status"
                 }
             }
         },
         {
             "name": "stop",
             "summary": "Starts a relayer of type eth2near or near2eth/ if already running it nops",
-            "params": [
-                {
-                    "$ref": "#/components/contentDescriptors/RelayerType"
-                }
-            ],
+            "params": [],
             "result": {
                 "name": "relayerStop",
                 "description": "`true` if relayer stopped",
                 "schema": {
-                    "$ref": "#/components/schemas/RelayerStatus"
+                    "$ref": "#/components/schemas/Status"
                 }
             }
         }
     ],
     "components": {
         "schemas": {
-            "Logs": {
-                "title": "logData",
-                "type":"array",
-                "items": {
-                    "type":"string"
+            "Config": {
+                "title": "configData",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title":"name",
+                        "type":"string"
+                    }
                 }
             },
             "Status": {
                 "title": "statusData",
-                "type": "object",
-                "properties": {
-                    "services": {
-                        "$ref": "#/components/schemas/RelayerStatuses"
-                    }
-                }
+                "type": "string",
+                "enum": ["running","stopped","uninitialized","initialized"]
+
             },
             "RelayerStatus": {
                 "title": "relayerStatus",
