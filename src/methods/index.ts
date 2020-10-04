@@ -9,27 +9,27 @@ import { Service } from "../lib/service";
 const logger = makeLogger("RainbowRelayService", "Methods");
 
 export interface RainbowRelayServiceMethodMapping extends MethodMapping {
-    logs: types.Logs
     status: types.Status,
     start: types.Start,
     stop: types.Stop,
+    config: () => any,
 }
 
 
 export const methods = (service: Service): RainbowRelayServiceMethodMapping => {
-return {
-    logs: async (timestamp) => {
-        return [""]
-    },
-    start: async () =>{
-        return {} 
-    },
-    stop: async () => {
-        return {} 
-    },
-    status: async () => {
-        return  []
-    }
+    return {
+        start: async () =>{
+            return service.start()
+        },
+        stop: async () => {
+            return service.stop()
+        },
+        status: async () => {
+            return service.status()
+        },
+        config: async() => {
 
-}
+        }
+
+    }
 }
