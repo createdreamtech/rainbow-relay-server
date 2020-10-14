@@ -2,8 +2,8 @@
     "openrpc": "1.0.0",
     "info": {
         "version": "0.1.0",
-        "title": "Rainbow Bridge Relay Service",
-        "description": "A service to control rainbow bridge relayers.",
+        "title": "Carti Repository service",
+        "description": "A service to serve Carti package descriptions from",
         "license": {
             "name": "Apache 2.0",
             "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
@@ -11,123 +11,145 @@
     },
     "servers": [
         {
-            "url": "http://localhost:7755"
+            "url": "http://localhost:8855"
         }
     ],
     "methods": [
         {
-            "name": "status",
-            "summary": "Returns status data for relayer service included what's running",
+            "name": "packages",
+            "summary": "Returns list of packages available",
             "params": [],
             "result": {
-                "name": "status",
-                "description": "Service status description",
+                "name": "PackagesResult",
+                "description": "A list of packages",
                 "schema": {
-                    "$ref": "#/components/schemas/Status"
+                    "$ref": "#/components/schemas/Packages"
                 }
             }
         },
         {
-            "name": "config",
-            "summary": "Returns redacted configuration data for the relayer service",
-            "params": [],
+            "name": "add",
+            "summary": "Adds a package description to the repository",
+            "params": [
+                {
+                    "$ref": "#/components/contentDescriptors/PackageData"
+                }
+            ],
             "result": {
-                "name": "configResult",
-                "description": "Configuration of the service",
+                "name": "PackageResult",
+                "description": "result of adding a package",
                 "schema": {
-                    "$ref": "#/components/schemas/Config"
+                    "$ref": "#/components/schemas/Package"
                 }
             }
         },
         {
-            "name": "start",
-            "summary": "Starts a relayer of type eth2near or near2eth/ if already running it nops",
+            "name": "remove",
+            "summary": "Remove package from repository listing",
             "params": [],
             "result": {
-                "name": "relayerStart",
-                "description": "`true` if relayer started",
+                "name": "result",
                 "schema": {
-                    "$ref": "#/components/schemas/Status"
-                }
-            }
-        },
-        {
-            "name": "stop",
-            "summary": "Starts a relayer of type eth2near or near2eth/ if already running it nops",
-            "params": [],
-            "result": {
-                "name": "relayerStop",
-                "description": "`true` if relayer stopped",
-                "schema": {
-                    "$ref": "#/components/schemas/Status"
+                    "$ref": "#/components/contentDescriptors/PackageData"
                 }
             }
         }
     ],
     "components": {
         "schemas": {
-            "Config": {
-                "title": "configData",
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "title":"name",
-                        "type":"string"
-                    }
-                }
+            "Cid": {
+                "title": "Cid",
+                "type": "string"
             },
-            "Status": {
-                "title": "statusData",
-                "type": "string",
-                "enum": ["running","stopped","uninitialized","initialized"]
-
-            },
-            "RelayerStatus": {
-                "title": "relayerStatus",
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    }
-                }
-            },
-            "RelayerStatuses": {
-                "title": "relayerStatuses",
+            "Packages": {
+                "title": "Packages",
                 "type": "array",
                 "items": {
-                    "$ref": "#/components/schemas/RelayerStatus"
+                    "$ref": "#/components/schemas/Package"
                 }
             },
-            "RelayerType": {
-                "title": "relayerType",
-                "description": "The type for a relayer",
-                "type": "string",
-                "enum": [
-                    "eth2near",
-                    "near2eth"
+            "Package": {
+                "title": "Package",
+                "type": "object",
+                "properties": {
+                    "defaultLocation": {
+                        "type": "string"
+                    },
+                    "version": {
+                        "type": "string"
+                    },
+                    "author": {
+                        "$ref": "#/components/schemas/Author"
+                    },
+                    "machineHash": {
+                        "$ref": "#/components/schemas/MachineHash"
+                    },
+                    "name": {
+                        "$ref": "#/components/schemas/Name"
+                    },
+                    "description": {
+                        "$ref": "#/components/schemas/Desc"
+                    },
+                    "assets": {
+                        "$ref": "#/components/schemas/Assets"
+                    }
+                },
+                "required": [
+                    "version",
+                    "author",
+                    "machineHash",
+                    "name",
+                    "description",
+                    "assets"
                 ]
             },
-            "Timestamp": {
-                "title": "timestamp",
-                "type": "number"
+            "Author": {
+                "title": "Author",
+                "type": "string"
+            },
+            "MachineHash": {
+                "title": "MachineHash",
+                "type": "string"
+            },
+            "Name": {
+                "title": "Name",
+                "type": "string"
+            },
+            "Desc": {
+                "title": "Desc",
+                "type": "string"
+            },
+            "Asset": {
+                "title": "Asset",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "$ref": "#/components/schemas/Name"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/Cid"
+                    }
+                },
+                "required": [
+                    "name",
+                    "data"
+                ]
+            },
+            "Assets": {
+                "title": "Assets",
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Asset"
+                }
             }
         },
         "contentDescriptors": {
-            "RelayerType": {
-                "name": "relayerType",
-                "description": "The type of relayer you're refering to",
-                "summary": "The relayer type",
+            "PackageData": {
+                "name": "package",
+                "description": "Specification for the package that you're uploading",
+                "summary": "The package description as IPLD object",
                 "schema": {
-                    "$ref": "#/components/schemas/RelayerType"
-                }
-            },
-            "Timestamp": {
-                "name": "timestamp",
-                "summary": "unix timestamp in seconds",
-                "required": false,
-                "description": "defaults to last 1hr in server time",
-                "schema": {
-                    "$ref": "#/components/schemas/Timestamp"
+                    "$ref": "#/components/schemas/Package"
                 }
             }
         }
