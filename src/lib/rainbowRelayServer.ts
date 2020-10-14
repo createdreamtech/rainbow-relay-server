@@ -8,7 +8,7 @@ import {Config} from "./config"
 
 import openRPCDoc from "../../openrpc.json";
 import jsonSchemaRefParser from "json-schema-ref-parser";
-import { createService } from "./service";
+import { createService } from "./serviceUtil";
 const openRPC = openRPCDoc as any;
 /**
  * RainbowRelayServer - is the server routing side of the rainbow relay proxy 

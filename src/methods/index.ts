@@ -17,6 +17,7 @@ export interface RainbowRelayServiceMethodMapping extends MethodMapping {
 
 
 export const methods = (service: Service): RainbowRelayServiceMethodMapping => {
+    service.init()
     return {
         start: async () =>{
             return service.start()

@@ -13,6 +13,11 @@ program
     "Set port for rainbow relay service",
     "7755",
   )
+  .option(
+    "-c, --configPath <config>",
+    "Set config will default to ~/.rainbow values if unspecified",
+    "~/.rainbow"
+  )
   .requiredOption(
     "-s, --service <service>",
     "Set service type",
